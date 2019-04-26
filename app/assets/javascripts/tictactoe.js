@@ -20,9 +20,3 @@ function doTurn() {
 function attachListeners() {
 
 }
-
-$("#save").click(function(){
-   
-    alert('wooo');
-});
-

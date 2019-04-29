@@ -1,7 +1,7 @@
 // Code your JavaScript / jQuery solution here
 
 function player() {
-
+  console.log('doing things')
 }
 
 function updateState() {

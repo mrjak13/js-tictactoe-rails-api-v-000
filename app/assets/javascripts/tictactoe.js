@@ -12,8 +12,8 @@ function player() {
   }
 }
 
-function updateState(td) {
-  td.innerHTML = player();
+function updateState(square) {
+  square.innerHTML = player();
 }
 
 function setMessage(text) {
@@ -21,15 +21,25 @@ function setMessage(text) {
 }
 
 function checkWinner() {
-  // if (checkHorizontal() || checkVertical() || checkDiagonal() == true) {
-  //   setMessage(player() + 'is the winner')
+  if (checkHorizontal() == true || checkVertical() == true || checkDiagonal() == true) {
+    var message = `Player ${player()} Won!`
+    setMessage(message)
+    return true
+  }else{
+    return false
   }
 }
 
-function doTurn(element) {
-  updateState(element);
-  checkWinner();
-  turn += 1;
+function doTurn(square) {
+  if (checkWinner() == true) {
+    clearBoard();
+    turn = 0
+  }else if (checkFull() == true){
+    setMessage("Tie game.")
+  }else{
+    updateState(square);
+    turn += 1;
+  }
 }
 
 function attachListeners() {
@@ -38,21 +48,49 @@ function attachListeners() {
 
 function checkHorizontal() {
   var table = $('table tr td')
-  // debugger;
-
-  table[0].innerHTML == table[1].innerHTML && table[0].innerHTML == table[2].innerHTML ||
-  table[3].innerHTML == table[4].innerHTML && table[3].innerHTML == table[5].innerHTML ||
-  table[6].innerHTML == table[7].innerHTML && table[6].innerHTML == table[8].innerHTML
-  debugger
+  if (table[0].innerHTML == table[1].innerHTML && table[0].innerHTML == table[2].innerHTML && table[0].innerHTML != "" ||
+  table[3].innerHTML == table[4].innerHTML && table[3].innerHTML == table[5].innerHTML && table[3].innerHTML != "" ||
+  table[6].innerHTML == table[7].innerHTML && table[6].innerHTML == table[8].innerHTML && table[6].innerHTML != "") {
+    return true
+  }else{
+    return false
+  }
 }
 
 function checkVertical() {
-  table[0].innerHTML == table[3].innerHTML && table[0].innerHTML == table[6].innerHTML ||
-  table[1].innerHTML == table[4].innerHTML && table[1].innerHTML == table[7].innerHTML ||
-  table[2].innerHTML == table[5].innerHTML && table[2].innerHTML == table[8].innerHTML
+  var table = $('table tr td')
+  if (table[0].innerHTML == table[3].innerHTML && table[0].innerHTML == table[6].innerHTML && table[0].innerHTML != "" ||
+  table[1].innerHTML == table[4].innerHTML && table[1].innerHTML == table[7].innerHTML && table[1].innerHTML != "" ||
+  table[2].innerHTML == table[5].innerHTML && table[2].innerHTML == table[8].innerHTML && table[2].innerHTML != "") {
+    return true
+  }else{
+    return false
+  }
 }
 
 function checkDiagonal() {
-  table[0].innerHTML == table[4].innerHTML && table[0].innerHTML == table[8].innerHTML ||
-  table[2].innerHTML == table[4].innerHTML && table[2].innerHTML == table[6].innerHTML
+  var table = $('table tr td')
+  if (table[0].innerHTML == table[4].innerHTML && table[0].innerHTML == table[8].innerHTML && table[0].innerHTML != "" ||
+  table[2].innerHTML == table[4].innerHTML && table[2].innerHTML == table[6].innerHTML && table[2].innerHTML != "") {
+    return true
+  }else{
+    return false
+  }
+}
+
+function checkFull() {
+  var table = $('table tr td')
+  if(table[0].innerHTML != "" && table[1].innerHTML != "" && table[2].innerHTML != "" && table[3].innerHTML != "" && table[4].innerHTML != "" &&
+  table[5].innerHTML != "" && table[6].innerHTML != "" && table[7].innerHTML != "" && table[8].innerHTML != "") {
+    return true
+  }else{
+    return false
+  }
+}
+
+function clearBoard() {
+  var squares = document.querySelectorAll('td')
+  $.each(squares, function(k, v) {
+	v.innerHTML = ""
+  })
 }

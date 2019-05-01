@@ -1,7 +1,5 @@
 // Code your JavaScript / jQuery solution here
-
 var turn = 0
-
 // var table = $('table tr td')
 
 function player() {
@@ -31,18 +29,65 @@ function checkWinner() {
 }
 
 function doTurn(square) {
+  updateState(square);
   if (checkWinner() == true) {
     clearBoard();
     turn = 0
   }else if (checkFull() == true){
-    setMessage("Tie game.")
+    return setMessage("Tie game.")
   }else{
-    updateState(square);
     turn += 1;
   }
 }
 
 function attachListeners() {
+  // var table = $('table tr td')
+  // table[0].addEventListener('click', function(e){
+	// doTurn(this);
+  // })
+  //
+  // table[1].addEventListener('click', function(e){
+	// doTurn(this);
+  // })
+  //
+  // table[2].addEventListener('click', function(e){
+	// doTurn(this);
+  // })
+  //
+  // table[3].addEventListener('click', function(e){
+	// doTurn(this);
+  // })
+  //
+  // table[4].addEventListener('click', function(e){
+	// doTurn(this);
+  // })
+  //
+  // table[5].addEventListener('click', function(e){
+	// doTurn(this);
+  // })
+  //
+  // table[6].addEventListener('click', function(e){
+	// doTurn(this);
+  // })
+  //
+  // table[7].addEventListener('click', function(e){
+	// doTurn(this);
+  // })
+  //
+  // table[8].addEventListener('click', function(e){
+	// doTurn(this);
+  // })
+
+
+  // table.on("click", function() {
+  //   doTurn(this);
+  // });
+
+  // var squares = document.querySelectorAll('td')
+  // for(var x=0; x<squares.length; x++) {
+  //   squares[x].addEventListener("click", function(e) {
+  //     doTurn(this);
+  //   });
 
 }
 

@@ -1,5 +1,6 @@
 // Code your JavaScript / jQuery solution here
 var turn = 0
+var id = ""
 // var table = $('table tr td')
 
 function player() {
@@ -47,9 +48,9 @@ function attachListeners() {
 
 $(document).ready(function attachListeners() {
   var table = $('table tr td')
-  var save = $('#save')
-  var previous = $('#previous')
-  var clear = $('#clear')
+  var save = document.getElementById('save')
+  var previous = document.getElementById('previous')
+  var clear = document.getElementById('clear')
 
   table.on("click", function() {
     if (this.innerHTML == "") {
@@ -57,10 +58,28 @@ $(document).ready(function attachListeners() {
     };
   });
 
-// save.on("click", function() {
-//   $.push
-// }
+  save.addEventListener('click', function(e) {
+    // if (@game.id) {
+    //   $.patch()
+    // }
 
+    if (id == "") {
+      $.post('/games', function(data) {
+        id = data['data']['id']
+      })
+    }else {
+      $.patch(`/games/${id}`)
+    }
+
+  })
+
+  previous.addEventListener('click', function(e) {
+    $.get('/games')
+  })
+
+  clear.addEventListener('click', function(e){
+  	clearBoard();
+  })
 });
 
 

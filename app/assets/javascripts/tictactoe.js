@@ -10,6 +10,7 @@ function player() {
   }
 }
 
+
 function updateState(square) {
   square.innerHTML = player();
 }
@@ -19,7 +20,7 @@ function setMessage(text) {
 }
 
 function checkWinner() {
-  if (checkHorizontal() == true || checkVertical() == true || checkDiagonal() == true) {
+  if (checkHorizontal() || checkVertical() || checkDiagonal()) {
     var message = `Player ${player()} Won!`
     setMessage(message)
     return true
@@ -30,10 +31,10 @@ function checkWinner() {
 
 function doTurn(square) {
   updateState(square);
-  if (checkWinner() == true) {
+  if (checkWinner()) {
     clearBoard();
-    turn = 0
-  }else if (checkFull() == true){
+    // turn = 0
+  }else if (checkFull()){
     return setMessage("Tie game.")
   }else{
     turn += 1;
@@ -41,55 +42,27 @@ function doTurn(square) {
 }
 
 function attachListeners() {
-  // var table = $('table tr td')
-  // table[0].addEventListener('click', function(e){
-	// doTurn(this);
-  // })
-  //
-  // table[1].addEventListener('click', function(e){
-	// doTurn(this);
-  // })
-  //
-  // table[2].addEventListener('click', function(e){
-	// doTurn(this);
-  // })
-  //
-  // table[3].addEventListener('click', function(e){
-	// doTurn(this);
-  // })
-  //
-  // table[4].addEventListener('click', function(e){
-	// doTurn(this);
-  // })
-  //
-  // table[5].addEventListener('click', function(e){
-	// doTurn(this);
-  // })
-  //
-  // table[6].addEventListener('click', function(e){
-	// doTurn(this);
-  // })
-  //
-  // table[7].addEventListener('click', function(e){
-	// doTurn(this);
-  // })
-  //
-  // table[8].addEventListener('click', function(e){
-	// doTurn(this);
-  // })
-
-
-  // table.on("click", function() {
-  //   doTurn(this);
-  // });
-
-  // var squares = document.querySelectorAll('td')
-  // for(var x=0; x<squares.length; x++) {
-  //   squares[x].addEventListener("click", function(e) {
-  //     doTurn(this);
-  //   });
 
 }
+
+$(document).ready(function attachListeners() {
+  var table = $('table tr td')
+  var save = $('#save')
+  var previous = $('#previous')
+  var clear = $('#clear')
+
+  table.on("click", function() {
+    if (this.innerHTML == "") {
+      doTurn(this);
+    };
+  });
+
+// save.on("click", function() {
+//   $.push
+// }
+
+});
+
 
 function checkHorizontal() {
   var table = $('table tr td')
@@ -137,5 +110,6 @@ function clearBoard() {
   var squares = document.querySelectorAll('td')
   $.each(squares, function(k, v) {
 	v.innerHTML = ""
+  turn = 0
   })
 }

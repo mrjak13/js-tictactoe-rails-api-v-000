@@ -1,7 +1,7 @@
 // Code your JavaScript / jQuery solution here
 var turn = 0
 var id = ""
-var state = []
+var board = []
 // var table = $('table tr td')
 
 function player() {
@@ -60,12 +60,23 @@ $(document).ready(function attachListeners() {
   });
 
   save.addEventListener('click', function(e) {
+    game = {'state': board}
+    var saving = $.post('/games', game)
+    // var update = $.ajax({
+    //   type: "PATCH",
+    //   url: `/games/${id}`,
+    //   data: game,
+    //   dataType: "json",
+    //   contentType: 'application/json; charset=utf-8'
+    // })
+    debugger;
     if (id == "") {
-      $.post('/games', function(data) {
-        id = data['data']['id']
-      });
+      saving.done(function(data){
+        id = parseInt(data['data']['id'])
+        // debugger;
+        })
     }else {
-      $.patch(`/games/${id}`)
+      // update
     }
   })
 
@@ -77,6 +88,7 @@ $(document).ready(function attachListeners() {
   	clearBoard();
   })
 });
+
 
 function checkHorizontal() {
   var table = $('table tr td')
@@ -112,14 +124,7 @@ function checkDiagonal() {
 
 function checkFull() {
   setState()
-  return state.includes("") ? false : true
-  // var table = $('table tr td')
-  // if(table[0].innerHTML != "" && table[1].innerHTML != "" && table[2].innerHTML != "" && table[3].innerHTML != "" && table[4].innerHTML != "" &&
-  // table[5].innerHTML != "" && table[6].innerHTML != "" && table[7].innerHTML != "" && table[8].innerHTML != "") {
-  //   return true
-  // }else{
-  //   return false
-  // }
+  return board.includes("") ? false : true
 }
 
 function clearBoard() {
@@ -133,7 +138,7 @@ function clearBoard() {
 
 function setState() {
   var squares = document.querySelectorAll('td')
-  state = $.map(squares, function(k,v) {
+  board = $.map(squares, function(k,v) {
   	return k.innerHTML
   })
 }

@@ -35,7 +35,6 @@ function doTurn(square) {
   updateState(square);
   if (checkWinner()) {
     clearBoard();
-    // turn = 0
   }else if (checkFull()){
     return setMessage("Tie game.")
   }else{
@@ -60,23 +59,25 @@ $(document).ready(function attachListeners() {
   });
 
   save.addEventListener('click', function(e) {
-    game = {'state': board}
+    var game = {'state': board}
     var saving = $.post('/games', game)
-    // var update = $.ajax({
-    //   type: "PATCH",
-    //   url: `/games/${id}`,
-    //   data: game,
-    //   dataType: "json",
-    //   contentType: 'application/json; charset=utf-8'
-    // })
-    debugger;
-    if (id == "") {
-      saving.done(function(data){
-        id = parseInt(data['data']['id'])
-        // debugger;
-        })
+
+    if (id != "") {
+      $.ajax({
+        url: `/games/${id}`,
+        data: game,
+        dataType: "json",
+        method: "PATCH"
+      })
+      .success(function(json){
+      })
     }else {
-      // update
+      saving.done(function(data){
+        id = parseInt(data['data'].id)
+        // $('#games')
+        var html = '<li><a href=`/games/${id}`>`${id}`</li>'
+        debugger;
+      })
     }
   })
 

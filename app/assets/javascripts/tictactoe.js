@@ -2,7 +2,12 @@
 var turn = 0
 var id = ""
 var board = []
+let currentGame = {}
 // var table = $('table tr td')
+// function Game(id, state) {
+//   this.id = id
+//   this.state = state
+// }
 
 function player() {
   if (turn % 2 === 0) {
@@ -51,6 +56,8 @@ $(document).ready(function attachListeners() {
   var save = document.getElementById('save')
   var previous = document.getElementById('previous')
   var clear = document.getElementById('clear')
+  // var gamesButton = $('div#games button')
+  var gameButton = document.querySelectorAll('div#games button')
 
   table.on("click", function() {
     if (this.innerHTML == "") {
@@ -60,8 +67,6 @@ $(document).ready(function attachListeners() {
 
   save.addEventListener('click', function(e) {
     var game = {'state': board}
-    var saving = $.post('/games', game)
-
     if (id != "") {
       $.ajax({
         url: `/games/${id}`,
@@ -69,20 +74,27 @@ $(document).ready(function attachListeners() {
         dataType: "json",
         method: "PATCH"
       })
-      .success(function(json){
-      })
-    }else {
-      saving.done(function(data){
+    }else{
+      $.post('/games', game, function(data){
         id = parseInt(data['data'].id)
-        // $('#games')
-        var html = '<li><a href=`/games/${id}`>`${id}`</li>'
-        debugger;
+        // appendGame(id)
       })
     }
   })
 
   previous.addEventListener('click', function(e) {
-    $.get('/games')
+    $.get(`/games`, function(data){
+      $.each(data.data, function(k, v) {
+      	appendGame(parseInt(v.id))
+      }).done
+      $('#games button').on('click', function(e) {
+        $.get(`/games/${this.innerHTML}`, function(data){
+          $.each(document.querySelectorAll('td'), function(k, v){
+            v.innerHTML = data.data.attributes.state[k]
+          })
+        })
+      })
+    })
   })
 
   clear.addEventListener('click', function(e){
@@ -130,10 +142,10 @@ function checkFull() {
 
 function clearBoard() {
   var squares = document.querySelectorAll('td')
-  $.each(squares, function(k, v) {
-	v.innerHTML = ""
   id = ""
   turn = 0
+  $.each(squares, function(k, v) {
+	v.innerHTML = ""
   })
 }
 
@@ -142,4 +154,12 @@ function setState() {
   board = $.map(squares, function(k,v) {
   	return k.innerHTML
   })
+}
+
+function appendGame(gameId) {
+  var li = document.createElement("li")
+  var button = document.createElement("button")
+  button.innerText = gameId
+  li.append(button)
+  $('#games').append(li)
 }

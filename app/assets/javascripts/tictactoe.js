@@ -1,20 +1,12 @@
 // Code your JavaScript / jQuery solution here
 var turn = 0
-var id = ""
-var board = []
-let currentGame = {}
+let id = ""
+var board = ["", "", "", "", "", "", "", "", ""]
+// var game = {'state': board}
 // var table = $('table tr td')
-// function Game(id, state) {
-//   this.id = id
-//   this.state = state
-// }
 
 function player() {
-  if (turn % 2 === 0) {
-    return 'X';
-  }else{
-    return 'O';
-  }
+  return turn % 2 === 0 ? 'X' : 'O';
 }
 
 
@@ -28,8 +20,8 @@ function setMessage(text) {
 
 function checkWinner() {
   if (checkHorizontal() || checkVertical() || checkDiagonal()) {
-    var message = `Player ${player()} Won!`
-    setMessage(message)
+    saveOrUpdateGame();
+    setMessage(`Player ${player()} Won!`)
     return true
   }else{
     return false
@@ -40,7 +32,9 @@ function doTurn(square) {
   updateState(square);
   if (checkWinner()) {
     clearBoard();
+    id = ""
   }else if (checkFull()){
+    saveOrUpdateGame();
     return setMessage("Tie game.")
   }else{
     turn += 1;
@@ -48,58 +42,41 @@ function doTurn(square) {
 }
 
 function attachListeners() {
-
-}
-
-$(document).ready(function attachListeners() {
-  var table = $('table tr td')
-  var save = document.getElementById('save')
-  var previous = document.getElementById('previous')
-  var clear = document.getElementById('clear')
-  // var gamesButton = $('div#games button')
-  var gameButton = document.querySelectorAll('div#games button')
-
-  table.on("click", function() {
+  $('table tr td').on("click", function() {
     if (this.innerHTML == "") {
       doTurn(this);
     };
   });
 
-  save.addEventListener('click', function(e) {
-    var game = {'state': board}
-    if (id != "") {
-      $.ajax({
-        url: `/games/${id}`,
-        data: game,
-        dataType: "json",
-        method: "PATCH"
-      })
-    }else{
-      $.post('/games', game, function(data){
-        id = parseInt(data['data'].id)
-        // appendGame(id)
-      })
-    }
+  $('#save').on('click', function(e) {
+    saveOrUpdateGame();
   })
 
-  previous.addEventListener('click', function(e) {
+  $('#previous').on('click', function(e) {
+    removeLi();
     $.get(`/games`, function(data){
       $.each(data.data, function(k, v) {
       	appendGame(parseInt(v.id))
-      }).done
+      })
       $('#games button').on('click', function(e) {
         $.get(`/games/${this.innerHTML}`, function(data){
+          id = data.data.id
           $.each(document.querySelectorAll('td'), function(k, v){
             v.innerHTML = data.data.attributes.state[k]
           })
+          setTurn(data.data.attributes.state);
         })
       })
     })
   })
 
-  clear.addEventListener('click', function(e){
+  $('#clear').on('click', function(e){
   	clearBoard();
   })
+}
+
+$(document).ready(function() {
+  attachListeners();
 });
 
 
@@ -162,4 +139,40 @@ function appendGame(gameId) {
   button.innerText = gameId
   li.append(button)
   $('#games').append(li)
+}
+
+function saveGame() {
+  var game = {'state': board}
+  $.post('/games', game, function(data){
+    id = parseInt(data['data'].id)
+  })
+}
+
+function updateGame() {
+  var game = {'state': board}
+  $.ajax({
+    url: `/games/${id}`,
+    data: game,
+    dataType: "json",
+    method: "PATCH"
+  })
+}
+
+function saveOrUpdateGame() {
+  if (id != "") {
+    updateGame();
+  }else{
+    saveGame();
+  }
+}
+
+function removeLi() {
+  $('#games li').remove()
+}
+
+function setTurn(board){
+	turn = 0
+	board.forEach(function(token){
+		if (token != ""){turn += 1}
+	})
 }

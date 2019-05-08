@@ -54,20 +54,7 @@ function attachListeners() {
 
   $('#previous').on('click', function(e) {
     removeLi();
-    $.get(`/games`, function(data){
-      $.each(data.data, function(k, v) {
-      	appendGame(parseInt(v.id))
-      })
-      $('#games button').on('click', function(e) {
-        $.get(`/games/${this.innerHTML}`, function(data){
-          id = data.data.id
-          $.each(document.querySelectorAll('td'), function(k, v){
-            v.innerHTML = data.data.attributes.state[k]
-          })
-          setTurn(data.data.attributes.state);
-        })
-      })
-    })
+    previousGames();
   })
 
   $('#clear').on('click', function(e){
@@ -164,6 +151,23 @@ function saveOrUpdateGame() {
   }else{
     saveGame();
   }
+}
+
+function previousGames() {
+  $.get(`/games`, function(data){
+    $.each(data.data, function(k, v) {
+      appendGame(parseInt(v.id))
+    })
+    $('#games button').on('click', function(e) {
+      $.get(`/games/${this.innerHTML}`, function(data){
+        id = data.data.id
+        $.each(document.querySelectorAll('td'), function(k, v){
+          v.innerHTML = data.data.attributes.state[k]
+        })
+        setTurn(data.data.attributes.state);
+      })
+    })
+  })
 }
 
 function removeLi() {

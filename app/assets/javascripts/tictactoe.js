@@ -121,11 +121,11 @@ function setState() {
 }
 
 function appendGame(gameId) {
-  var li = document.createElement("li")
+  // var li = document.createElement("li")
   var button = document.createElement("button")
   button.innerText = gameId
-  li.append(button)
-  $('#games').append(li)
+  // li.append(button)
+  $('#games').append(button)
 }
 
 function saveGame() {

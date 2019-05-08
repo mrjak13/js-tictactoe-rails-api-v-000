@@ -171,7 +171,7 @@ function previousGames() {
 }
 
 function removeLi() {
-  $('#games li').remove()
+  $('#games button').remove()
 }
 
 function setTurn(board){
